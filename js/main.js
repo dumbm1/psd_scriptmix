@@ -18,7 +18,7 @@
     loadJSX ("json2.js");
 
     var userData  = csInterface.getSystemPath (SystemPath.USER_DATA),
-        store     = userData + '/LocalStore/jsxSet/',
+        store     = userData + '/LocalStore/psd_scriptmix/',
         storeCfg  = store + 'cfg/',
         storeImg  = store + 'img/',
         storeJsx  = store + 'jsx/',
