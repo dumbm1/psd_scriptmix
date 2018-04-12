@@ -17,16 +17,15 @@
 
     loadJSX('json2.js');
 
-    var userData  = csInterface.getSystemPath(SystemPath.USER_DATA),
-        store     = userData + '/LocalStore/psd_scriptmix/',
-        storeCfg  = store + 'cfg/',
-        storeImg  = store + 'img/',
-        storeJsx  = store + 'jsx/',
-        btnsList  = storeCfg + 'btns_List.txt',
-        btnsNames = [],
-
-        divBtns   = document.getElementById('btns'),
-        i;
+    var userData          = csInterface.getSystemPath(SystemPath.USER_DATA),
+        store             = userData + '/LocalStore/psd_scriptmix/',
+        storeCfg          = store + 'cfg/',
+        storeImg          = store + 'img/',
+        storeJsx          = store + 'jsx/',
+        btnsNames         = [],
+        divBtns           = document.getElementById('btns'),
+        i,
+        BTN_DEFAULT_WIDTH = 30;
 
     // load the buttons names from file
     csInterface.evalScript('readlnBtnsList()', function (result) {
@@ -36,6 +35,13 @@
       for (i = 0; i < btnsNames.length; i++) {
         addBtnToInterface(btnsNames[i]);
       }
+      csInterface.evalScript('readIni()', function (res) {
+        if (!res) res = BTN_DEFAULT_WIDTH;
+        var btnW = +res;
+        $('.btn').width(btnW);
+        $('.btn').height(btnW);
+      });
+
     });
 
     /**
@@ -66,16 +72,23 @@
       csInterface.evalScript('openFolder("' + store + '")');
     });
     $('#btn_scale_up').click(function () {
-      var btnW = $(".btn").width();
+      var btnW = $('.btn').width();
       btnW++;
-      $(".btn").width(btnW);
-      $(".btn").height(btnW);
+      $('.btn').width(btnW);
+      $('.btn').height(btnW);
+      csInterface.evalScript('writeIni(' + JSON.stringify(btnW) + ')');
     });
     $('#btn_scale_down').click(function () {
-      var btnW = $(".btn").width();
+      var btnW = $('.btn').width();
       btnW--;
-      $(".btn").width(btnW);
-      $(".btn").height(btnW);
+      $('.btn').width(btnW);
+      $('.btn').height(btnW);
+      csInterface.evalScript('writeIni(' + JSON.stringify(btnW) + ')');
+    });
+    $('#btn_defaults').click(function () {
+      $('.btn').width(BTN_DEFAULT_WIDTH);
+      $('.btn').height(BTN_DEFAULT_WIDTH);
+      csInterface.evalScript('writeIni(' + JSON.stringify(BTN_DEFAULT_WIDTH) + ')');
     });
 
     /** * * * * * * * * * * * *
@@ -83,34 +96,43 @@
      * * * * * * * * * * * * **/
 
     function addBtnToInterface(btnName) {
-      if (btnName.length == 0) return;
-      var btn = document.createElement('input');
-      btn.setAttribute('type', 'image');
-      btn.setAttribute('class', 'btn');
-      btn.setAttribute('src', storeImg + btnName + '.png');
-      btn.setAttribute('title', btnName);
-      btn.setAttribute('name', btnName);
-      btn.setAttribute('id', 'btn_' + btnName);
 
-      btn.addEventListener('click', function () {
-        csInterface.evalScript('$.evalFile("' + storeJsx + btnName + '.jsx' + '")');
+      csInterface.evalScript('readIni()', function (res) {
+        if (!res) res = BTN_DEFAULT_WIDTH;
+        var btnW = +res;
+
+        if (btnName.length == 0) return;
+        var btn = document.createElement('input');
+        btn.setAttribute('type', 'image');
+        btn.setAttribute('class', 'btn');
+        btn.setAttribute('src', storeImg + btnName + '.png');
+        btn.setAttribute('title', btnName);
+        btn.setAttribute('name', btnName);
+        btn.setAttribute('id', 'btn_' + btnName);
+
+        btn.addEventListener('click', function () {
+          csInterface.evalScript('$.evalFile("' + storeJsx + btnName + '.jsx' + '")');
+        });
+
+        btn.oncontextmenu = function () {
+          var delName    = this.name,
+              btnToDel   = document.getElementById('btn_' + btnName),
+              confirmDel = confirm('Delete script: ' + delName + '?');
+          if (confirmDel) {
+            csInterface.evalScript('delBtnFromStore("' + delName + '" )', function (result) {
+              btnToDel.remove();
+            });
+          }
+          return false;
+        };
+
+        btn = divBtns.appendChild(btn);
+
+        $('#' + 'btn_' + btnName).width(btnW);
+        $('#' + 'btn_' + btnName).height(btnW);
+
       });
-
-      btn.oncontextmenu = function () {
-        var delName    = this.name,
-            btnToDel   = document.getElementById('btn_' + btnName),
-            confirmDel = confirm('Delete script: ' + delName + '?');
-        if (confirmDel) {
-          csInterface.evalScript('delBtnFromStore("' + delName + '" )', function (result) {
-            btnToDel.remove();
-          });
-        }
-        return false;
-      };
-
-      divBtns.appendChild(btn);
     }
-
   }
 
   /** * * * * * * * * * *

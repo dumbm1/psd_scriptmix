@@ -72,7 +72,8 @@ var themeManager = (function () {
         btnSort      = document.getElementById('btn_prefs'),
         btnSource    = document.getElementById('btn_source'),
         btnScaleUp   = document.getElementById('btn_scale_up'),
-        btnScaleDown = document.getElementById('btn_scale_down');
+        btnScaleDown = document.getElementById('btn_scale_down'),
+        btnDefaults  = document.getElementById('btn_defaults');
 
     btnAdd.setAttribute('src', 'img/w_addBtn-01.png');
     btnKillCep.setAttribute('src', 'img/w_killCEP-01.png');
@@ -81,6 +82,7 @@ var themeManager = (function () {
     btnSource.setAttribute('src', 'img/w_jsx_source-01.png');
     btnScaleUp.setAttribute('src', 'img/w_scale-up-01.png');
     btnScaleDown.setAttribute('src', 'img/w_scale-down-01.png');
+    btnDefaults.setAttribute('src', 'img/w_defaults-01.png');
 
     var darkBgdColor = toHex(panelBgColor, 60);
 
@@ -95,6 +97,7 @@ var themeManager = (function () {
       btnSource.setAttribute('src', 'img/jsx_source-01.png');
       btnScaleUp.setAttribute('src', 'img/scale-up-01.png');
       btnScaleDown.setAttribute('src', 'img/scale-down-01.png');
+      btnDefaults.setAttribute('src', 'img/defaults-01.png');
     }
 
     var lightBgdColor = toHex(panelBgColor, -100);

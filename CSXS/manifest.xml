@@ -2,7 +2,7 @@
 <ExtensionManifest
         Version="4.0"
         ExtensionBundleId="com.wk.psd_scriptmix"
-        ExtensionBundleVersion="1.3.1"
+        ExtensionBundleVersion="1.3.2"
         ExtensionBundleName="psd_scriptmix"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Author>
@@ -18,7 +18,7 @@
         <![CDATA[Place your favorite jsx-scripts as a custom png-buttons]]>
     </Abstract>
     <ExtensionList>
-        <Extension Id="com.wk.psd_scriptmix" Version="1.3.1"/>
+        <Extension Id="com.wk.psd_scriptmix" Version="1.3.2"/>
     </ExtensionList>
     <ExecutionEnvironment>
         <HostList>
@@ -46,7 +46,7 @@
                 </Lifecycle>
                 <UI>
                     <Type>Panel</Type>
-                    <Menu>psd_scriptmix_v1.3.1</Menu>
+                    <Menu>psd_scriptmix_v1.3.2</Menu>
                     <Geometry>
                         <Size>
                             <Height>150</Height>
