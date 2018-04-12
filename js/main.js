@@ -66,8 +66,16 @@
       csInterface.evalScript('openFolder("' + store + '")');
     });
     $('#btn_scale_up').click(function () {
+      var btnW = $(".btn").width();
+      btnW++;
+      $(".btn").width(btnW);
+      $(".btn").height(btnW);
     });
     $('#btn_scale_down').click(function () {
+      var btnW = $(".btn").width();
+      btnW--;
+      $(".btn").width(btnW);
+      $(".btn").height(btnW);
     });
 
     /** * * * * * * * * * * * *
