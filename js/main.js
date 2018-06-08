@@ -7,6 +7,10 @@
 
 (function () {
   'use strict';
+  // jsx function realnBtnsList sometimes fail
+  // for that reason function (loadButtons) is run recursively
+  var MAX_RECURS_COUNT = 5,
+      recursCount      = 0;
 
   var csInterface = new CSInterface();
   init();
@@ -25,24 +29,12 @@
         btnsNames         = [],
         divBtns           = document.getElementById('btns'),
         i,
-        BTN_DEFAULT_WIDTH = 30;
+        BTN_DEFAULT_WIDTH = 30,
+        BTN_MIN_WIDTH     = 10,
+        BTN_MAX_WIDTH     = 60;
 
     // load the buttons names from file
-    csInterface.evalScript('readlnBtnsList()', function (result) {
-      if (result.length == 0) return;
-      btnsNames = JSON.parse(result);
-
-      for (i = 0; i < btnsNames.length; i++) {
-        addBtnToInterface(btnsNames[i]);
-      }
-      csInterface.evalScript('readIni()', function (res) {
-        if (!res) res = BTN_DEFAULT_WIDTH;
-        var btnW = +res;
-        $('.btn').width(btnW);
-        $('.btn').height(btnW);
-      });
-
-    });
+    loadButtons();
 
     /**
      * SERVICE BUTTONS HANDLERS
@@ -74,6 +66,7 @@
     $('#btn_scale_up').click(function () {
       var btnW = $('.btn').width();
       btnW++;
+      if (btnW > BTN_MAX_WIDTH) btnW = BTN_MAX_WIDTH;
       $('.btn').width(btnW);
       $('.btn').height(btnW);
       csInterface.evalScript('writeIni(' + JSON.stringify(btnW) + ')');
@@ -81,6 +74,7 @@
     $('#btn_scale_down').click(function () {
       var btnW = $('.btn').width();
       btnW--;
+      if (btnW < BTN_MIN_WIDTH) btnW = BTN_MIN_WIDTH;
       $('.btn').width(btnW);
       $('.btn').height(btnW);
       csInterface.evalScript('writeIni(' + JSON.stringify(btnW) + ')');
@@ -132,6 +126,31 @@
         $('#' + 'btn_' + btnName).height(btnW);
 
       });
+    }
+
+    function loadButtons() {
+      csInterface.evalScript('readlnBtnsList()', function (result) {
+        if (result.match(/error/i)) {
+          recursCount++;
+          if (recursCount >= MAX_RECURS_COUNT) return false;
+          loadButtons();
+        }
+        btnsNames = JSON.parse(result);
+
+        for (i = 0; i < btnsNames.length; i++) {
+          addBtnToInterface(btnsNames[i]);
+        }
+        csInterface.evalScript('readIni()', function (res) {
+          if (!res) res = BTN_DEFAULT_WIDTH;
+          var btnW = +res;
+          if (btnW > BTN_MAX_WIDTH) btnW = BTN_MAX_WIDTH;
+          if (btnW < BTN_MIN_WIDTH) btnW = BTN_MIN_WIDTH;
+          $('.btn').width(btnW);
+          $('.btn').height(btnW);
+        });
+
+      });
+      return true;
     }
   }
 

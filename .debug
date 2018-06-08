@@ -6,8 +6,8 @@
             <!-- Comment Host tags according to the apps you want your panel to support -->
             
             <!-- Photoshop -->
-              <Host Name="PHXS" Port="8099"/>
-              <Host Name="PHSP" Port="8099"/>
+              <Host Name="PHXS" Port="8098"/>
+              <Host Name="PHSP" Port="8098"/>
 
         </HostList>
     </Extension>
